@@ -8,16 +8,18 @@ class Move(enum.Enum):
     scissors = 3
 
 
+Beats = {
+    Move.rock: Move.scissors,
+    Move.scissors: Move.paper,
+    Move.paper: Move.rock,
+}
+Loses = {winning: losing for losing, winning in Beats.items()}
+
+
 class Opponent(enum.Enum):
     A = Move.rock
     B = Move.paper
     C = Move.scissors
-
-
-class Player(enum.Enum):
-    X = Move.rock
-    Y = Move.paper
-    Z = Move.scissors
 
 
 class Result(enum.Enum):
@@ -26,18 +28,18 @@ class Result(enum.Enum):
     lose = 0
 
 
-def check_result(opp: Move, play: Move) -> Result:
-    if opp == play:
-        return Result.draw
-    return (
-        Result.win
-        if (
-            (play is Move.rock and opp is Move.scissors)
-            or (play is Move.paper and opp is Move.rock)
-            or (play is Move.scissors and opp is Move.paper)
-        )
-        else Result.lose
-    )
+class Player(enum.Enum):
+    X = Result.lose
+    Y = Result.draw
+    Z = Result.win
+
+
+def check_result(opp: Move, play: Result) -> Move:
+    if play is Result.draw:
+        return opp
+    if play is Result.win:
+        return Loses[opp]
+    return Beats[opp]
 
 
 def main(rounds: list[tuple[str, str]]) -> int:
