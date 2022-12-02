@@ -9,7 +9,7 @@ def main(calory_lines) -> int:
             elf_idx += 1
             continue
         calory_counter[elf_idx] += int(calories)
-    return calory_counter.most_common(1)[0][1]
+    return sum(calories for _elf, calories in calory_counter.most_common(3))
 
 
 def input_lines() -> list[str]:

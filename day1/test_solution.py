@@ -18,4 +18,4 @@ def test_example_input():
         "",
         "10000",
     ]
-    assert solution.main(calory_lines) == 24000
+    assert solution.main(calory_lines) == 45000
