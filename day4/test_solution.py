@@ -39,3 +39,23 @@ def test_assignment_contains_or_contained_in_assignment(
         )
         == expected
     )
+
+
+@pytest.mark.parametrize(
+    "assignment_pair, expected",
+    [
+        (example_input[0], False),
+        (example_input[1], False),
+        (example_input[2], True),
+        (example_input[3], True),
+        (example_input[4], True),
+        (example_input[5], True),
+        (("51-51", "52-68"), False),
+        (("66-66", "9-65"), False),
+    ],
+)
+def test_assignment_overlaps(assignment_pair: AssignmentPair, expected: bool) -> None:
+    assert (
+        Assignment(assignment_pair[0]).overlaps(Assignment(assignment_pair[1]))
+        == expected
+    )

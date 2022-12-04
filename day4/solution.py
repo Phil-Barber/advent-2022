@@ -13,6 +13,9 @@ class Assignment:
     def contains(self, other: "Assignment") -> bool:
         return self.start <= other.start and self.end >= other.end
 
+    def overlaps(self, other: "Assignment") -> bool:
+        return self.start <= other.end and self.end >= other.start
+
 
 def assignment_contians_or_contained_in(one: Assignment, other: Assignment) -> bool:
     return one.contains(other) or other.contains(one)
@@ -20,7 +23,7 @@ def assignment_contians_or_contained_in(one: Assignment, other: Assignment) -> b
 
 def main(assignment_pairs: list[AssignmentPair]) -> int:
     assignments = [(Assignment(a), Assignment(b)) for a, b in assignment_pairs]
-    return sum(assignment_contians_or_contained_in(*pair) for pair in assignments)
+    return sum(one.overlaps(other) for one, other in assignments)
 
 
 def input_lines() -> list[str]:
