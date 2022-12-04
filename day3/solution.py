@@ -1,28 +1,32 @@
-import itertools
+import functools
+import operator
+import typing
 
 Rucksack = str
+Group = tuple[Rucksack, Rucksack, Rucksack]
 
 
 def main(rucksacks: list[Rucksack]) -> int:
-    mistakes = map(get_mistakes, rucksacks)
-    all_mistakes = itertools.chain.from_iterable(mistakes)
-    priorities = map(get_priority, all_mistakes)
+    badges = map(get_badge, get_groups(rucksacks))
+    priorities = map(get_priority, badges)
     return sum(priorities)
 
 
-def get_mistakes(rucksack: Rucksack) -> list[str]:
-    set_left: set[str] = set()
-    set_right: set[str] = set()
-    comp_size = len(rucksack) / 2
-    for idx, item in enumerate(rucksack):
-        if idx < comp_size:
-            set_left.add(item)
-        else:
-            set_right.add(item)
-    mistakes = set_left & set_right
-    if len(mistakes) > 1:
-        raise Exception(f"\n{rucksack}\n{set_left}\n{set_right}\n{mistakes}")
-    return mistakes
+def get_groups(rucksacks: list[Rucksack]) -> typing.Iterator[Group]:
+    group: list[Rucksack] = []
+    for rucksack in rucksacks:
+        if len(group) == 3:
+            yield typing.cast(Group, tuple(group))
+            group = []
+        group.append(rucksack)
+    yield typing.cast(Group, tuple(group))
+
+
+def get_badge(group: Group) -> list[str]:
+    common = list(functools.reduce(operator.and_, map(set, group)))
+    if len(common) != 1:
+        raise Exception(f"nope\n{group}\n{common}")
+    return common[0]
 
 
 def get_priority(mistake: str) -> int:
