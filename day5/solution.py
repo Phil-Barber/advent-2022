@@ -77,16 +77,14 @@ def parse_instruction_line(instruction_str: str) -> typing.Optional[Instruction]
 
 
 def perform_instruction(stacks: Stacks, instruction: Instruction) -> Stacks:
-    for _ in range(instruction.num_to_move):
-        source_crates = stacks[instruction.source_stack].crates
-        try:
-            mover, new_source_crates = source_crates[0], source_crates[1:]
-        except IndexError as err:
-            print(*stacks, instruction)
-            raise err
-        new_target_crates = [mover, *stacks[instruction.target_stack].crates]
-        stacks[instruction.source_stack] = Stack(*new_source_crates)
-        stacks[instruction.target_stack] = Stack(*new_target_crates)
+    source_crates = stacks[instruction.source_stack].crates
+    mover, new_source_crates = (
+        source_crates[0 : instruction.num_to_move],
+        source_crates[instruction.num_to_move :],
+    )
+    new_target_crates = [*mover, *stacks[instruction.target_stack].crates]
+    stacks[instruction.source_stack] = Stack(*new_source_crates)
+    stacks[instruction.target_stack] = Stack(*new_target_crates)
     return stacks
 
 
