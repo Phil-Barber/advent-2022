@@ -2,12 +2,13 @@ import collections
 
 
 def main(signal: str) -> int:
+    marker_len = 14
     buffer: "collections.deque[str]" = collections.deque()
     for count, char in enumerate(signal, 1):
         buffer.append(char)
-        if len(buffer) > 4:
+        if len(buffer) > marker_len:
             buffer.popleft()
-        if len(buffer) == 4 and len(list(set(buffer))) == 4:
+        if len(buffer) == marker_len and len(list(set(buffer))) == marker_len:
             return count
 
 
